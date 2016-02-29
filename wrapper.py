@@ -7,3 +7,5 @@ def compiler():
 if __name__ == "__main__":
     if sys.argv[1] == "---ncardebug-print-compiler-name":
         print compiler()
+    if sys.argv[1] == "---ncardebug-print-arg":
+        print sys.argv[2]
