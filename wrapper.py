@@ -1,8 +1,8 @@
 #!/bin/env python
-import os, sys
+import os, sys, subprocess
 
 def compiler():
-    return sys.argv[0] # can be os.path.basename(__file__)
+    return os.path.basename(__file__)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
