@@ -46,7 +46,7 @@ def test_single_ldflag():
     env = os.environ;
     env['NCAR_LDFLAGS_FOO'] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
     assert not "-L" + env['NCAR_LDFLAGS_FOO'] in results
-    results = wrapper.include_str() # after the env var is set
+    results = wrapper.ldflags_str() # after the env var is set
     assert "-L" + env['NCAR_LDFLAGS_FOO'] in results
     del env['NCAR_LDFLAGS_FOO']
 
