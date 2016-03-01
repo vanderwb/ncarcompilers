@@ -23,7 +23,7 @@ def test_callexternal():
 
 def test_single_include():
     results = wrapper.include_str() # before the env var is set
-    env = os.environ;
+    env = os.environ
     name = 'NCAR_INC_FOO'
     env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
     assert not "-I" + env[name] in results
@@ -32,7 +32,7 @@ def test_single_include():
     del env[name]
 
 def test_multiple_includes():
-    env = os.environ;
+    env = os.environ
     name_foo = 'NCAR_INC_FOO'
     name_bar = 'NCAR_INC_BAR'
     env[name_foo] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
@@ -47,7 +47,7 @@ def test_multiple_includes():
 def test_single_ldflag():
     name = 'NCAR_LDFLAGS_FOO'
     results = wrapper.ldflags_str() # before the env var is set
-    env = os.environ;
+    env = os.environ
     env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
     assert not "-L" + env[name] in results
     results = wrapper.ldflags_str() # after the env var is set
@@ -62,7 +62,7 @@ def test_single_rpath():
     RPATH_FLAG = "-Wl,-rpath," # this depends on the compiler and it is so for gcc and intel, will add pgi later
     name = 'NCAR_LDFLAGS_FOO'
     results = wrapper.rpath_str() # before the env var is set
-    env = os.environ;
+    env = os.environ
     env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
     assert not RPATH_FLAG + env[name] in results
     results = wrapper.rpath_str() # after the env var is set
@@ -72,7 +72,7 @@ def test_single_rpath():
 def test_single_linklib():
     name = 'NCAR_LIBS_FOO'
     results = wrapper.linklib_str() # before the env var is set
-    env = os.environ;
+    env = os.environ
     env[name] = '-lfooc -lfoof -lfoo'
     assert not env[name] in results
     results = wrapper.linklib_str() # after the env var is set
