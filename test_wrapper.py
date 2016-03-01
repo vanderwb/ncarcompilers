@@ -41,6 +41,15 @@ def test_multiple_includes():
     del env['NCAR_INC_FOO']
     del env['NCAR_INC_BAR']
 
+def test_single_ldflag():
+    results = wrapper.ldflags_str() # before the env var is set
+    env = os.environ;
+    env['NCAR_LDFLAGS_FOO'] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+    assert not "-L" + env['NCAR_LDFLAGS_FOO'] in results
+    results = wrapper.include_str() # after the env var is set
+    assert "-L" + env['NCAR_LDFLAGS_FOO'] in results
+    del env['NCAR_LDFLAGS_FOO']
+
 if __name__ == "__main__":
     import test_helper
     test_helper.help()
