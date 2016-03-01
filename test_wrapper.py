@@ -1,11 +1,15 @@
+import subprocess, os
 import wrapper
-import subprocess
 
 def check_output(cmd):
     return subprocess.check_output(subprocess.list2cmdline(cmd), shell=True).strip()
 
 def test_name():
-    for name in ["wrapper.py", "link-to-wrapper", "gcc"]:
+    list_to_test = ["wrapper.py"]
+    for myfile in os.listdir("./"):
+        if os.path.islink(myfile):
+            list_to_test.append(myfile)
+    for name in list_to_test:
         print name
         assert check_output(["./" + name, "---ncardebug-print-compiler-name"]) == name
 
