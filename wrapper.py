@@ -4,12 +4,18 @@ import os, sys, subprocess
 def compiler_name():
     return os.path.basename(__file__)
 
-def include_str():
+def create_str(parse_env=None, joinwith=""):
     inc = ""
     for key, value in os.environ.iteritems():
-        if key.startswith('NCAR_INC_'):
-            inc += "-I" + value + " "
+        if key.startswith(parse_env):
+            inc += joinwith + value + " "
     return inc
+
+def include_str():
+    return create_str(parse_env = 'NCAR_INC_', joinwith='-I')
+
+def ldflags_str():
+    return create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-L')
 
 def invoke():
     compiler_name_with_path = subprocess.check_output("which " + compiler_name(), shell=True).strip()
