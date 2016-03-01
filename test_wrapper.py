@@ -50,6 +50,20 @@ def test_single_ldflag():
     assert "-L" + env['NCAR_LDFLAGS_FOO'] in results
     del env['NCAR_LDFLAGS_FOO']
 
+# no need to test multiple ldflags, since the code exercising this is exactly the same for multiple includes
+# def test_multiple_ldflags:
+#    pass
+
+def test_single_rpath():
+    RPATH_FLAG = "-Wl,-rpath," # this depends on the compiler and it is so for gcc and intel, will add pgi later
+    results = wrapper.rpath_str() # before the env var is set
+    env = os.environ;
+    env['NCAR_LDFLAGS_FOO'] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+    assert not RPATH_FLAG + env['NCAR_LDFLAGS_FOO'] in results
+    results = wrapper.rpath_str() # after the env var is set
+    assert RPATH_FLAG + env['NCAR_LDFLAGS_FOO'] in results
+    del env['NCAR_LDFLAGS_FOO']
+
 if __name__ == "__main__":
     import test_helper
     test_helper.help()
