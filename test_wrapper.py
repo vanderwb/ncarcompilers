@@ -18,19 +18,5 @@ def test_callexternal():
     assert "Free Software Foundation" in results
 
 if __name__ == "__main__":
-    import unittest
-    def my_wrapper(func):
-        def wrapped(argument_to_forget):
-            func()
-        return wrapped
-
-    class myTest(unittest.TestCase):
-        pass
-
-    setattr(myTest, "test_name", classmethod(my_wrapper(test_name)))
-    #myTest.test_name = my_wrapper(test_name)
- #   a = myTest()
-  #  print a.test_name
-   # print a.test_name()
-
-    unittest.main()
+    import test_helper
+    test_helper.help()
