@@ -64,6 +64,15 @@ def test_single_rpath():
     assert RPATH_FLAG + env['NCAR_LDFLAGS_FOO'] in results
     del env['NCAR_LDFLAGS_FOO']
 
+def test_single_linklib():
+    results = wrapper.linklib_str() # before the env var is set
+    env = os.environ;
+    env['NCAR_LIBS_FOO'] = '-lfooc -lfoof -lfoo'
+    assert not env['NCAR_LIBS_FOO'] in results
+    results = wrapper.linklib_str() # after the env var is set
+    assert env['NCAR_LIBS_FOO'] in results
+    del env['NCAR_LIBS_FOO']
+
 if __name__ == "__main__":
     import test_helper
     test_helper.help()
