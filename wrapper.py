@@ -6,7 +6,7 @@ def compiler():
 
 def invoke():
     my_path = subprocess.check_output("which " + compiler(), shell=True).strip()
-    subprocess.call([my_path] + sys.argv[1:])
+    subprocess.call([my_path] + sys.argv[1:]) # this should use shell
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
