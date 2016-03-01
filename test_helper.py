@@ -1,5 +1,8 @@
 import unittest, inspect
 
+# this helper needs to be a separate file from test_wrapper and
+# should not include any fuction whose name starts with test
+
 def help():
     print "**************************************************"
     print "*   WARNING: running with py.test preferred      *"
