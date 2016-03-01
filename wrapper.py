@@ -20,11 +20,17 @@ def ldflags_str():
 def rpath_str():
     return create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-Wl,-rpath,')
 
-def invoke():
+def invoke(show):
     compiler_name_with_path = subprocess.check_output("which " + compiler_name(), shell=True).strip()
-    subprocess.call([compiler_name_with_path] + sys.argv[1:]) # this should use shell
+    cmd = ( subprocess.list2cmdline([compiler_name_with_path] + sys.argv[1:]) + " " +
+           include_str() + " "  + ldflags_str() + " " + rpath_str() )
+    if show:
+        print cmd
+    else:
+        subprocess.call(cmd, shell=True)
 
 if __name__ == "__main__":
+    show = False
     if len(sys.argv) > 1:
         if sys.argv[1] == "---ncardebug-print-compiler-name":
             print compiler_name()
@@ -32,4 +38,6 @@ if __name__ == "__main__":
         if sys.argv[1] == "---ncardebug-print-arg":
             print sys.argv[2]
             sys.exit(0)
-    invoke()
+        if sys.argv[1] == "--show":
+            show = True
+    invoke(show)
