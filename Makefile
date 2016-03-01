@@ -1,4 +1,4 @@
-PYTEST_AVAILABLE=$( shell which py.test 2>/dev/null; echo $? )
+PYTEST_AVAILABLE=$(shell which py.test > /dev/null 2>&1 ; echo $$? )
 
 .PHONY: test oldtest clean
 
