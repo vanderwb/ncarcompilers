@@ -26,7 +26,6 @@ def test_single_include():
     env = os.environ;
     env['NCAR_INC_FOO'] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
     assert not "-I" + env['NCAR_INC_FOO'] in results
-
     results = wrapper.include_str() # after the env var is set
     assert "-I" + env['NCAR_INC_FOO'] in results
     del env['NCAR_INC_FOO']
@@ -39,6 +38,8 @@ def test_multiple_includes():
     assert "-I" + env['NCAR_INC_FOO'] in results
     assert "-I" + env['NCAR_INC_BAR'] in results
     # maybe should check also the space in between, but that's too much logic for a unit test
+    del env['NCAR_INC_FOO']
+    del env['NCAR_INC_BAR']
 
 if __name__ == "__main__":
     import test_helper
