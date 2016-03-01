@@ -22,22 +22,30 @@ def test_callexternal():
     assert "Free Software Foundation" in results
 
 def test_single_include():
-    results = wrapper.include_str() # before the env var is set
-    env = os.environ
     name = 'NCAR_INC_FOO'
-    env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
-    assert not "-I" + env[name] in results
-    results = wrapper.include_str() # after the env var is set
-    assert "-I" + env[name] in results
+    value = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
+
+    env = os.environ
+    env.pop(name, None)
+    results = wrapper.include_str() # without the env var
+    assert not "-I" + value in results
+
+    env[name] = value
+    results = wrapper.include_str() # with the env var
+    assert "-I" + value in results
     del env[name]
 
 def test_multiple_includes():
-    env = os.environ
     name_foo = 'NCAR_INC_FOO'
     name_bar = 'NCAR_INC_BAR'
-    env[name_foo] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
-    env[name_bar] = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/include'
-    results = wrapper.include_str() # after the env var is set
+    value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
+    value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/include'
+
+    env = os.environ
+    env[name_foo] = value_foo
+    env[name_bar] = value_bar 
+
+    results = wrapper.include_str() # with the env var
     assert "-I" + env[name_foo] in results
     assert "-I" + env[name_bar] in results
     # maybe should check also the space in between, but that's too much logic for a unit test
@@ -46,12 +54,16 @@ def test_multiple_includes():
 
 def test_single_ldflag():
     name = 'NCAR_LDFLAGS_FOO'
-    results = wrapper.ldflags_str() # before the env var is set
+    value = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+
     env = os.environ
-    env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
-    assert not "-L" + env[name] in results
-    results = wrapper.ldflags_str() # after the env var is set
-    assert "-L" + env[name] in results
+    env.pop(name, None)
+    results = wrapper.ldflags_str() # without the env var
+    assert not "-L" + value in results
+
+    env[name] = value
+    results = wrapper.ldflags_str() # with the env var
+    assert "-L" + value in results
     del env[name]
 
 # no need to test multiple ldflags, since the code exercising this is exactly the same for multiple includes
@@ -61,22 +73,30 @@ def test_single_ldflag():
 def test_single_rpath():
     RPATH_FLAG = "-Wl,-rpath," # this depends on the compiler and it is so for gcc and intel, will add pgi later
     name = 'NCAR_LDFLAGS_FOO'
-    results = wrapper.rpath_str() # before the env var is set
+    value = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+
     env = os.environ
-    env[name] = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
-    assert not RPATH_FLAG + env[name] in results
-    results = wrapper.rpath_str() # after the env var is set
-    assert RPATH_FLAG + env[name] in results
+    env.pop(name, None)
+    results = wrapper.rpath_str() # without the env var
+    assert not RPATH_FLAG + value in results
+
+    env[name] = value
+    results = wrapper.rpath_str() # with the env var set
+    assert RPATH_FLAG + value in results
     del env[name]
 
 def test_single_linklib():
     name = 'NCAR_LIBS_FOO'
-    results = wrapper.linklib_str() # before the env var is set
+    value = '-lfooc -lfoof -lfoo'
+
     env = os.environ
-    env[name] = '-lfooc -lfoof -lfoo'
-    assert not env[name] in results
-    results = wrapper.linklib_str() # after the env var is set
-    assert env[name] in results
+    env.pop(name, None)
+    results = wrapper.linklib_str() # without the env var
+    assert not value in results
+
+    env[name] = value
+    results = wrapper.linklib_str() # with the env var set
+    assert value in results
     del env[name]
 
 if __name__ == "__main__":
