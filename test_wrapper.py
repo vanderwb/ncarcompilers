@@ -99,6 +99,37 @@ def test_single_linklib():
     assert value in results
     del env[name]
 
+def test_overriding_linklibs():
+    name_foo = 'NCAR_LIBS_FOO'
+    name_bar = 'NCAR_LIBS_BAR'
+    value_foo = '-lfooc -lfoof -lfoo'
+    value_bar = '-lbar'
+
+    env = os.environ
+    env[name_foo] = value_foo
+    env[name_bar] = value_bar
+    results = wrapper.linklib_str()
+    assert value_foo in results
+    assert value_bar in results
+
+    env['NCAR_EXCLUDE_LIBS'] = "1"
+    results = wrapper.linklib_str()
+    assert not value_foo in results
+    assert not value_bar in results
+
+    env['NCAR_EXCLUDE_LIBS'] = "False"
+    results = wrapper.linklib_str()
+    assert not value_foo in results
+    assert not value_bar in results
+
+    del env['NCAR_EXCLUDE_LIBS']
+    results = wrapper.linklib_str()
+    assert value_foo in results
+    assert value_bar in results
+    del env[name_foo]
+    del env[name_bar]
+
+
 if __name__ == "__main__":
     import test_helper
     test_helper.help()
