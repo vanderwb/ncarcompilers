@@ -21,7 +21,11 @@ def rpath_str():
     return create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-Wl,-rpath,')
 
 def linklib_str():
-    return create_str(parse_env = 'NCAR_LIBS_', joinwith='')
+    try:
+        os.environ['NCAR_EXCLUDE_LIBS']
+        return ""
+    except:
+        return create_str(parse_env = 'NCAR_LIBS_', joinwith='')
 
 def invoke(show):
     compiler_name_with_path = subprocess.check_output("which " + compiler_name(), shell=True).strip()
