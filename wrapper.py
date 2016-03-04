@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, sys, subprocess
+import os, sys, subprocess, filecmp
 
 def compiler_name():
     return os.path.basename(__file__)
@@ -43,21 +43,24 @@ def compiler_name_with_path():
     myenv = os.environ.copy()
     myenv["PATH"] = remove_current_directory(myenv["PATH"])
     full_name = subprocess.check_output("which " + compiler_name(), env = myenv, shell=True).strip()
-    return [full_name]
+    return full_name
 
 def avoid_recursion():
     avoid_recursion_env_var = "NCAR_COMPILER_PATH_RECURSION"
     myenv = os.environ.copy()
     try:
         foo = myenv[avoid_recursion_env_var]
-        print "Compiler recursion detected: ", compiler_name_with_path()[0]
-        sys.exit(1)
+        if filecmp.cmp(__file__, compiler_name_with_path()):
+            print "Compiler recursion detected: ", compiler_name_with_path()
+            sys.exit(1)
     except KeyError:
-        myenv[avoid_recursion_env_var] = "1"
+        pass
+
+    myenv[avoid_recursion_env_var] = "1"
     return myenv
 
 def invoke(show):
-    cmd = ( subprocess.list2cmdline(compiler_name_with_path() + sys.argv[1:]) + " " +
+    cmd = ( subprocess.list2cmdline([compiler_name_with_path()] + sys.argv[1:]) + " " +
            include_str() + " "  + ldflags_str() + " " + rpath_str() + " " + 
            asneeded_str() + " " + linklib_str() )
     if show:
