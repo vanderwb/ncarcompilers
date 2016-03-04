@@ -15,17 +15,18 @@ def test_name():
 
 def test_remove_current_directory():
     wrapper_path = os.path.dirname(os.path.realpath(__file__))
+
     # the following is platform independent but it is too cryptic for my like of unit tests
     # mypath = wrapper_path + os.pathsep + os.path.join("one", "of", "my", "paths") + os.pathsep + os.path.join("some", "other", "path")
+
     mypath = wrapper_path + ":/one/of/my/paths:/some/other/path"             # at the beginning (most important)
-    print wrapper.remove_current_directory(mypath)
-    assert not wrapper_path in wrapper.remove_current_directory(mypath)
+    assert wrapper.remove_current_directory(mypath) == "/one/of/my/paths:/some/other/path"
+
     mypath = "/one/of/my/paths:/some/other/path:" + wrapper_path             # at the end (almost irrelevant, besides to avoid recursion when the actual compiler is missing)
-    print wrapper.remove_current_directory(mypath)
-    assert not wrapper_path in wrapper.remove_current_directory(mypath)
+    assert wrapper.remove_current_directory(mypath) == "/one/of/my/paths:/some/other/path"
+
     mypath = "/one/of/my/paths:" + wrapper_path  + ":/some/other/path"             # in the middle, still important
-    print wrapper.remove_current_directory(mypath)
-    assert not wrapper_path in wrapper.remove_current_directory(mypath)
+    assert wrapper.remove_current_directory(mypath) == "/one/of/my/paths:/some/other/path"
 
 def test_quotes():
     quoted_argument = "This is a filename with spaces.exe"
