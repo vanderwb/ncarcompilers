@@ -27,10 +27,19 @@ def linklib_str():
     except:
         return create_str(parse_env = 'NCAR_LIBS_', joinwith='')
 
+def asneeded_str():
+    try:
+        os.environ['NCAR_EXCLUDE_ASNEEDED']
+        return ""
+    except:
+        return "-Wl,--as-needed"
+
+
 def invoke(show):
     compiler_name_with_path = subprocess.check_output("which " + compiler_name(), shell=True).strip()
     cmd = ( subprocess.list2cmdline([compiler_name_with_path] + sys.argv[1:]) + " " +
-           include_str() + " "  + ldflags_str() + " " + rpath_str() + " " + linklib_str() )
+           include_str() + " "  + ldflags_str() + " " + rpath_str() + " " + 
+           asneeded_str() + " " + linklib_str() )
     if show:
         print cmd
     else:
