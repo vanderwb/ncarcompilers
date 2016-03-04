@@ -1,15 +1,15 @@
 PYTEST_AVAILABLE=$(shell which py.test > /dev/null 2>&1 ; echo $$? )
 
-.PHONY: test oldtest clean
+.PHONY: unittest oldunittest clean
 
-test:
+unittest:
 ifeq ($(PYTEST_AVAILABLE), 0)
 	py.test
 else
 	@$(MAKE) --quiet oldtest
 endif
 
-oldtest:
+oldunittest:
 	python test_wrapper.py
 
 clean:
