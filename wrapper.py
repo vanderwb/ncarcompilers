@@ -5,7 +5,9 @@ def compiler_name():
     return os.path.basename(__file__)
 
 def remove_current_directory(s):
-    return s
+    wrapper_path = os.path.dirname(os.path.realpath(__file__))
+    ss = s.replace(wrapper_path, "").replace(os.pathsep + os.pathsep, os.pathsep)
+    return ss.strip(os.pathsep)
 
 def create_str(parse_env=None, joinwith=""):
     inc = ""
