@@ -21,7 +21,7 @@ unittest:
 ifeq ($(PYTEST_AVAILABLE), 0)
 	py.test
 else
-	@$(MAKE) --quiet oldtest
+	@$(MAKE) --quiet oldunittest
 endif
 
 oldunittest:
