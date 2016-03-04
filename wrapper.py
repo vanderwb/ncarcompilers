@@ -4,6 +4,9 @@ import os, sys, subprocess
 def compiler_name():
     return os.path.basename(__file__)
 
+def remove_current_directory(s):
+    return s
+
 def create_str(parse_env=None, joinwith=""):
     inc = ""
     for key, value in os.environ.iteritems():
@@ -34,16 +37,31 @@ def asneeded_str():
     except:
         return "-Wl,--as-needed"
 
+def compiler_name_with_path():
+    myenv = os.environ.copy()
+    myenv["PATH"] = remove_current_directory(myenv["PATH"])
+    full_name = subprocess.check_output("which " + compiler_name(), env = myenv, shell=True).strip()
+    return [full_name]
+
+def avoid_recursion():
+    avoid_recursion_env_var = "NCAR_COMPILER_PATH_RECURSION"
+    myenv = os.environ.copy()
+    try:
+        foo = myenv[avoid_recursion_env_var]
+        print "Compiler recursion detected: ", compiler_name_with_path()[0]
+        sys.exit(1)
+    except KeyError:
+        myenv[avoid_recursion_env_var] = "1"
+    return myenv
 
 def invoke(show):
-    compiler_name_with_path = subprocess.check_output("which " + compiler_name(), shell=True).strip()
-    cmd = ( subprocess.list2cmdline([compiler_name_with_path] + sys.argv[1:]) + " " +
+    cmd = ( subprocess.list2cmdline(compiler_name_with_path() + sys.argv[1:]) + " " +
            include_str() + " "  + ldflags_str() + " " + rpath_str() + " " + 
            asneeded_str() + " " + linklib_str() )
     if show:
         print cmd
     else:
-        subprocess.call(cmd, shell=True)
+        subprocess.call(cmd, env=avoid_recursion(), shell=True)
 
 if __name__ == "__main__":
     show = False
@@ -56,4 +74,5 @@ if __name__ == "__main__":
             sys.exit(0)
         if sys.argv[1] == "--show":
             show = True
+
     invoke(show)
