@@ -11,9 +11,10 @@ def remove_current_directory(s):
 
 def create_str(parse_env=None, joinwith=""):
     inc = ""
-    for key, value in os.environ.iteritems():
+    for key, values in os.environ.iteritems():
         if key.startswith(parse_env):
-            inc += joinwith + value + " "
+            for value in values.split(os.pathsep):
+                inc += joinwith + value + " "
     return inc
 
 def include_str():
