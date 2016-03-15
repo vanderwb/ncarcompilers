@@ -161,6 +161,12 @@ def test_overriding_linklibs():
     del env[name_foo]
     del env[name_bar]
 
+def test_clean_arguments():
+    cli_args = "-lfoo -lnetcdff -lbar"
+    from_modules = "-Bstatic -lnetcdff -Bdynamic"
+    expected_args = "-lfoo -lbar"
+    actual_args = wrapper.clean_arguments(cli_args, from_modules)
+    assert actual_args == expected_args
 
 if __name__ == "__main__":
     import test_helper
