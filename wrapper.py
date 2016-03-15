@@ -60,10 +60,15 @@ def avoid_recursion():
     myenv[avoid_recursion_env_var] = "1"
     return myenv
 
+def clean_arguments(args, duplicates):
+    return args
+
 def invoke(show):
-    cmd = ( subprocess.list2cmdline([compiler_name_with_path()] + sys.argv[1:]) + " " +
+    ncar_linklib = linklib_str()
+    arguments = clean_arguments(sys.argv[1:], ncar_linklib)
+    cmd = ( subprocess.list2cmdline([compiler_name_with_path()] + arguments) + " " +
            include_str() + " "  + ldflags_str() + " " + rpath_str() + " " + 
-           asneeded_str() + " " + linklib_str() )
+           asneeded_str() + " " + ncar_linklib )
     if show:
         print cmd
     else:
