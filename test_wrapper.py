@@ -67,6 +67,23 @@ def test_multiple_includes():
     del env[name_foo]
     del env[name_bar]
 
+def test_multiple_includes_together():
+    name = 'NCAR_INC_FOO'
+    value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
+    value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/include'
+
+    env = os.environ
+    env.pop(name, None)
+    results = wrapper.include_str() # without the env var
+    assert not "-I" + value_foo in results
+    assert not "-I" + value_bar in results
+
+    env[name] = value_foo + ":" + value_bar
+    results = wrapper.include_str() # with the env var
+    assert "-I" + value_foo in results
+    assert "-I" + value_bar in results
+    del env[name]
+
 def test_single_ldflag():
     name = 'NCAR_LDFLAGS_FOO'
     value = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
