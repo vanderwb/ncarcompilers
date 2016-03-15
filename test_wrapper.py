@@ -162,9 +162,9 @@ def test_overriding_linklibs():
     del env[name_bar]
 
 def test_clean_arguments():
-    cli_args = "-lfoo -lnetcdff -lbar"
-    from_modules = "-Bstatic -lnetcdff -Bdynamic"
-    expected_args = "-lfoo -lbar"
+    cli_args = ["-lfoo", "-lnetcdff", "-lbar"]      # command line arguments come as a list
+    from_modules = "-Bstatic -lnetcdff -Bdynamic"   # module arguments come as a string
+    expected_args = ["-lfoo", "-lbar"]              # it needs to remove the duplicate one
     actual_args = wrapper.clean_arguments(cli_args, from_modules)
     assert actual_args == expected_args
 
