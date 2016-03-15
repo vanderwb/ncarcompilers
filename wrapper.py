@@ -61,7 +61,13 @@ def avoid_recursion():
     return myenv
 
 def clean_arguments(args, duplicates):
-    return args
+    clean_args = []
+    tbr = [d for d in duplicates.split(" ") if d.startswith("-l")]    # stuff to be removed, only -lsomething, ignoring duplicates in tbr itself 
+    for arg in args:
+        if not arg in tbr:
+            clean_args.append(arg)
+
+    return clean_args
 
 def invoke(show):
     ncar_linklib = linklib_str()
