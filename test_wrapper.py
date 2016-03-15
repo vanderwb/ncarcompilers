@@ -165,6 +165,14 @@ def test_clean_arguments():
     cli_args = ["-lfoo", "-lnetcdff", "-lbar"]      # command line arguments come as a list
     from_modules = "-Bstatic -lnetcdff -Bdynamic"   # module arguments come as a string
     expected_args = ["-lfoo", "-lbar"]              # it needs to remove the duplicate one
+    assert wrapper.clean_arguments(cli_args, "") == cli_args
+    actual_args = wrapper.clean_arguments(cli_args, from_modules)
+    assert actual_args == expected_args
+
+def test_clean_arguments_does_not_clean_too_much():
+    cli_args = ["-lfoo", "-lnetcdff", "-Bstatic", "-lbar", "-Bdynamic"]      # command line arguments come as a list
+    from_modules = "-Bstatic -lnetcdff -Bdynamic"                            # module arguments come as a string
+    expected_args = ["-lfoo", "-Bstatic", "-lbar", "-Bdynamic"]              # it must not remove the "-B" even if they are duplicate
     actual_args = wrapper.clean_arguments(cli_args, from_modules)
     assert actual_args == expected_args
 
