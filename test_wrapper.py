@@ -98,9 +98,27 @@ def test_single_ldflag():
     assert "-L" + value in results
     del env[name]
 
-# no need to test multiple ldflags, since the code exercising this is exactly the same for multiple includes
-# def test_multiple_ldflags:
-#    pass
+# no need to test multiple ldflags, since the code exercising this is
+# exactly the same for multiple includes, however a quick test for
+# the multiple flags together is appropriate to make sure it won't
+# be broken in the future
+
+def test_multiple_ldflags_together():
+    name = 'NCAR_LDFLAGS_FOO'
+    value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+    value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/lib'
+
+    env = os.environ
+    env.pop(name, None)
+    results = wrapper.ldflags_str() # without the env var
+    assert not "-L" + value_foo in results
+    assert not "-L" + value_bar in results
+
+    env[name] = value_foo + ":" + value_bar
+    results = wrapper.ldflags_str() # with the env var
+    assert "-L" + value_foo in results
+    assert "-L" + value_bar in results
+    del env[name]
 
 def test_single_rpath():
     RPATH_FLAG = "-Wl,-rpath," # this depends on the compiler and it is so for gcc and intel, will add pgi later
@@ -115,6 +133,29 @@ def test_single_rpath():
     env[name] = value
     results = wrapper.rpath_str() # with the env var set
     assert RPATH_FLAG + value in results
+    del env[name]
+
+# no need to test multiple rpath, since the code exercising this is
+# exactly the same for multiple includes, however a quick test for
+# the multiple rpath together is appropriate to make sure it won't
+# be broken in the future
+
+def test_multiple_rpath_together():
+    RPATH_FLAG = "-Wl,-rpath," # this depends on the compiler and it is so for gcc and intel, will add pgi later
+    name = 'NCAR_LDFLAGS_FOO'
+    value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/lib'
+    value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/lib'
+
+    env = os.environ
+    env.pop(name, None)
+    results = wrapper.ldflags_str() # without the env var
+    assert not RPATH_FLAG + value_foo in results
+    assert not RPATH_FLAG + value_bar in results
+
+    env[name] = value_foo + ":" + value_bar
+    results = wrapper.rpath_str() # with the env var set
+    assert RPATH_FLAG + value_foo in results
+    assert RPATH_FLAG + value_bar in results
     del env[name]
 
 def test_single_linklib():
