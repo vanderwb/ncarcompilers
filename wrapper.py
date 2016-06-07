@@ -52,7 +52,7 @@ def avoid_recursion():
     try:
         foo = myenv[avoid_recursion_env_var]
         if filecmp.cmp(__file__, compiler_name_with_path()):
-            print "Compiler recursion detected: ", compiler_name_with_path()
+            print >> sys.stderr, "Compiler recursion detected: ", compiler_name_with_path()
             sys.exit(1)
     except KeyError:
         pass
