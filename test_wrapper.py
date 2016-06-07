@@ -112,7 +112,7 @@ def test_multiple_ranked_ldflags():
 
     results = wrapper.ldflags_str() # with the env var
     expected = "-L" + env[name_foo] + " " + "-L" + env[name_bar]
-    assert results == expected
+    assert " ".join(results.split()) == expected.strip()
     del env[name_foo]
     del env[name_bar]
     del env['NCAR_RANK_FOO']
