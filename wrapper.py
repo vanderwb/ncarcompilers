@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, sys, subprocess, filecmp
+from collections import OrderedDict
 
 def compiler_name():
     return os.path.basename(__file__)
@@ -10,11 +11,24 @@ def remove_current_directory(s):
     return ss.strip(os.pathsep)
 
 def create_str(parse_env=None, joinwith=""):
-    inc = ""
-    for key, values in os.environ.iteritems():
+    myenv = os.environ.copy()
+    unsorted_libs = {}
+    for key, values in myenv.iteritems():
         if key.startswith(parse_env):
-            for value in values.split(os.pathsep):
-                inc += joinwith + value + " "
+            lib_name = key.split("_")[-1]
+            try:
+                rank = int(myenv['NCAR_RANK_' + lib_name])
+            except KeyError:
+                rank = 0
+            unsorted_libs[lib_name] = (rank, values)
+
+    print unsorted_libs
+    sorted_libs = OrderedDict(sorted(unsorted_libs.items(), key=lambda t: t[1][0]))
+    print sorted_libs
+    inc = ""
+    for values in sorted_libs.itervalues():
+        for value in values[1].split(os.pathsep):
+            inc += joinwith + value + " "
     return inc
 
 def include_str():
