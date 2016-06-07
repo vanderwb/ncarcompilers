@@ -17,9 +17,12 @@ def create_str(parse_env=None, joinwith=""):
         if key.startswith(parse_env):
             lib_name = key.split("_")[-1]
             try:
-                rank = int(myenv['NCAR_RANK_' + lib_name])
+                rank = float(myenv['NCAR_RANK_' + lib_name])
             except KeyError:
-                rank = 0
+                rank = 0.0
+            except ValueError:
+                rank = 0.0
+                print >> sys.stderr, "Warning: NCAR_RANK_" + lib_name + " is " + myenv['NCAR_RANK_' + lib_name] + " which is not a number"
             unsorted_libs[lib_name] = (rank, values)
 
     sorted_libs = OrderedDict(sorted(unsorted_libs.items(), key=lambda t: t[1][0]))
