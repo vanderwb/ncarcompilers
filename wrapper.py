@@ -22,9 +22,7 @@ def create_str(parse_env=None, joinwith=""):
                 rank = 0
             unsorted_libs[lib_name] = (rank, values)
 
-    print unsorted_libs
     sorted_libs = OrderedDict(sorted(unsorted_libs.items(), key=lambda t: t[1][0]))
-    print sorted_libs
     inc = ""
     for values in sorted_libs.itervalues():
         for value in values[1].split(os.pathsep):
