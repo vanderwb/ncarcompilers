@@ -99,6 +99,11 @@ def test_single_ldflag():
     del env[name]
 
 def test_multiple_ranked_ldflags():
+    helper_test_multiple_ranked_ldflags('0')
+    helper_test_multiple_ranked_ldflags('0.57')
+    helper_test_multiple_ranked_ldflags('some crappy string')
+
+def helper_test_multiple_ranked_ldflags(value):
     name_foo = 'NCAR_LDFLAGS_FOO'
     name_bar = 'NCAR_LDFLAGS_BAR'
     value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
@@ -106,7 +111,7 @@ def test_multiple_ranked_ldflags():
 
     env = os.environ
     env[name_foo] = value_foo
-    env['NCAR_RANK_FOO'] = '0'
+    env['NCAR_RANK_FOO'] = value
     env[name_bar] = value_bar
     env['NCAR_RANK_BAR'] = '1'
 
