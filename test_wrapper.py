@@ -98,10 +98,30 @@ def test_single_ldflag():
     assert "-L" + value in results
     del env[name]
 
-# no need to test multiple ldflags, since the code exercising this is
-# exactly the same for multiple includes, however a quick test for
-# the multiple flags together is appropriate to make sure it won't
-# be broken in the future
+def test_multiple_ranked_ldflags():
+    helper_test_multiple_ranked_ldflags('0')
+    helper_test_multiple_ranked_ldflags('0.57')
+    helper_test_multiple_ranked_ldflags('some crappy string')
+
+def helper_test_multiple_ranked_ldflags(value):
+    name_foo = 'NCAR_LDFLAGS_FOO'
+    name_bar = 'NCAR_LDFLAGS_BAR'
+    value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
+    value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/include'
+
+    env = os.environ
+    env[name_foo] = value_foo
+    env['NCAR_RANK_FOO'] = value
+    env[name_bar] = value_bar
+    env['NCAR_RANK_BAR'] = '1'
+
+    results = wrapper.ldflags_str() # with the env var
+    expected = "-L" + env[name_foo] + " " + "-L" + env[name_bar]
+    assert " ".join(results.split()) == expected.strip()
+    del env[name_foo]
+    del env[name_bar]
+    del env['NCAR_RANK_FOO']
+    del env['NCAR_RANK_BAR']
 
 def test_multiple_ldflags_together():
     name = 'NCAR_LDFLAGS_FOO'
