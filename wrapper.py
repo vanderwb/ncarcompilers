@@ -5,7 +5,7 @@ from collections import OrderedDict
 try:
     assert sys.version_info >= (2,6)
 except AssertionError:
-    print ("You need to run this wrapper using Python v2.6 or newer (but not Python v3.0)")
+    print >> sys.stderr, "You need to run this wrapper using Python v2.6 or newer (but not Python v3.0)"
     sys.exit(1)
 
 def compiler_name():
@@ -64,7 +64,11 @@ def asneeded_str():
 def compiler_name_with_path():
     myenv = os.environ.copy()
     myenv["PATH"] = remove_current_directory(myenv["PATH"])
-    full_name = subprocess.check_output("which " + compiler_name(), env = myenv, shell=True).strip()
+    try:
+        full_name = subprocess.check_output("which " + compiler_name(), env = myenv, shell=True).strip()
+    except subprocess.CalledProcessError:
+        print >> sys.stderr, compiler_name(), "not found, maybe you don't have the proper module loaded?"
+        sys.exit(1)
     return full_name
 
 def avoid_recursion():
