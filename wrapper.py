@@ -1,6 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import os, sys, subprocess, filecmp
 from collections import OrderedDict
+
+try:
+    assert sys.version_info >= (2,6)
+except AssertionError:
+    print ("You need to run this wrapper using Python v2.6 or newer (but not Python v3.0)")
+    sys.exit(1)
 
 def compiler_name():
     return os.path.basename(__file__)
