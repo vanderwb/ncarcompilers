@@ -88,6 +88,7 @@ def avoid_recursion():
 def clean_arguments(args, duplicates):
     clean_args = []
     tbr = [d for d in duplicates.split(" ") if d.startswith("-l")]    # stuff to be removed, only -lsomething, ignoring duplicates in tbr itself 
+    tbr.append("--show")                                              # don't need to print --show
     for arg in args:
         if not arg in tbr:
             clean_args.append(arg)
