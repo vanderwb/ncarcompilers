@@ -1,0 +1,32 @@
+#!/bin/bash
+#HPCI ml rm intel
+
+# saving current status of the repo
+branch=$(git symbolic-ref --short -q HEAD)
+if [ -z "${branch}" ]; then
+  tag=$(git name-rev --name-only --tags --no-undefined HEAD 2>/dev/null | sed -n 's/^\([^^~]\{1,\}\)\(\^0\)\{0,1\}$/\1/p')
+  branch=tags/${tag}
+fi
+
+# switching to desired version
+git checkout -q tags/v${HPCI_SW_VERSION}
+
+tag_checkedout=$?
+if [ $tag_checkedout -ne 0 ]; then
+  echo "Can't checkout version ${HPCI_SW_VERSION} aborting"
+  exit $tag_checkedout
+fi
+
+# if successfull, create directory and copy relevant files
+mkdir -p $HPCI_SW_DIR
+for file in *; do
+    if [[ $file != install-ncarcompiler* && \
+          $file != test_helper.py &&        \
+          $file != test_wrapper.py ]]; then \
+      echo $file
+      echo cp $file $HPCI_SW_DIR
+    fi
+done
+
+echo You may restore the previous status of the repo with
+echo git checkout $branch
