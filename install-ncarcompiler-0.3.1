@@ -21,6 +21,7 @@ fi
 mkdir -p $HPCI_SW_DIR
 for file in *; do
     if [[ $file != install-ncarcompiler* && \
+          $file != hpci.*.log &&            \
           $file != test_helper.py &&        \
           $file != test_wrapper.py ]]; then \
       cp $file $HPCI_SW_DIR
