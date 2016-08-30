@@ -23,8 +23,7 @@ for file in *; do
     if [[ $file != install-ncarcompiler* && \
           $file != test_helper.py &&        \
           $file != test_wrapper.py ]]; then \
-      echo $file
-      echo cp $file $HPCI_SW_DIR
+      cp $file $HPCI_SW_DIR
     fi
 done
 
