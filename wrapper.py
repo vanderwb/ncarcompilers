@@ -103,8 +103,10 @@ def invoke(show):
            asneeded_str() + " " + ncar_linklib )
     if show:
         print cmd
+        exit_code = 0
     else:
-        subprocess.call(cmd, env=avoid_recursion(), shell=True)
+        exit_code = subprocess.call(cmd, env=avoid_recursion(), shell=True)
+    return exit_code
 
 if __name__ == "__main__":
     show = False
@@ -118,4 +120,4 @@ if __name__ == "__main__":
         if sys.argv[1] == "--show":
             show = True
 
-    invoke(show)
+    sys.exit(invoke(show))
