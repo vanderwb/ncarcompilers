@@ -59,9 +59,11 @@ prepend_path("PATH",basepath)
 setenv("NCAR_EXCLUDE_ASNEEDED", "1")
 EOF
 
+echo "-----"
 echo Git repository for the modules status, checked in $HPCI_MOD_DIR
 git --git-dir=$HPCI_MOD_DIR/.git/ --work-tree=$HPCI_MOD_DIR status
-echo
 
+echo "-----"
 echo In current directory, you may restore the previous status of the repo with
 echo git checkout $branch
+echo "-----"
