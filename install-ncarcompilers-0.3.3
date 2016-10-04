@@ -24,7 +24,7 @@ for file in *; do
           $file != hpci.*.log &&            \
           $file != test_helper.py &&        \
           $file != test_wrapper.py ]]; then \
-      cp $file $HPCI_SW_DIR
+      cp -r $file $HPCI_SW_DIR              # preserving symbolic links
     fi
 done
 
