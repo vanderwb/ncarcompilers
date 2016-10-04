@@ -83,6 +83,7 @@ def avoid_recursion():
         pass
 
     myenv[avoid_recursion_env_var] = "1"
+    myenv["PATH"] = remove_current_directory(myenv["PATH"])
     return myenv
 
 def clean_arguments(args, duplicates):
