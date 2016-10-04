@@ -28,8 +28,40 @@ for file in *; do
     fi
 done
 
-echo "--------------------"
-echo Not creating the module yet, see https://github.com/NCAR/CheyenneModules/issues/7 for details
-echo "--------------------"
-echo You may restore the previous status of the repo with
+
+if [ -f $HPCI_MOD_DIR/compilers/intel/.version ];
+then
+   intel_default=`grep ModulesVersion $HPCI_MOD_DIR/compilers/intel/.version | awk '{print $3}' | tr -d '"'`
+else
+   intel_default_file=`ls $HPCI_MOD_DIR/compilers/intel/ | sort -V | tail -1`
+   intel_default=${intel_default_file%.lua}
+fi
+
+actual_file=$HPCI_MOD_DIR/intel/$intel_default/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua
+
+# Create the module with the following template
+cat << EOF > $actual_file
+require("posix")
+
+-- The message printed by the module whatis command
+whatis("ncarcompilers version v$HPCI_SW_VERSION")
+
+-- The message printed by the module help command
+help([[
+This module loads the NCAR compiler wrappers, that wraps the usual
+serial and parallel compilers to include all the required libraries
+and header files.
+]])
+
+local basepath = "$HPCI_SW_DIR"         -- base path
+prepend_path("PATH",basepath)
+
+setenv("NCAR_EXCLUDE_ASNEEDED", "1")
+EOF
+
+echo Git repository for the modules status, checked in $HPCI_MOD_DIR
+git --git-dir=$HPCI_MOD_DIR/.git/ --work-tree=$HPCI_MOD_DIR status
+echo
+
+echo In current directory, you may restore the previous status of the repo with
 echo git checkout $branch
