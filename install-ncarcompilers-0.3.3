@@ -59,6 +59,15 @@ prepend_path("PATH",basepath)
 setenv("NCAR_EXCLUDE_ASNEEDED", "1")
 EOF
 
+all_compilers=`ls $HPCI_MOD_DIR/la/compilers`
+
+for compiler in $all_compilers; do
+    for version in `ls $HPCI_MOD_DIR/la/$compiler`; do
+        echo I must do a
+        echo ln -s $HPCI_MOD_DIR/la/intel/$intel_default/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua $HPCI_MOD_DIR/la/$compiler/$version/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua
+    done
+done
+
 echo "-----"
 echo Git repository for the modules status, checked in $HPCI_MOD_DIR
 git --git-dir=$HPCI_MOD_DIR/.git/ --work-tree=$HPCI_MOD_DIR status
