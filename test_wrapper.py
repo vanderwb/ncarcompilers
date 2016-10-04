@@ -28,6 +28,9 @@ def test_remove_current_directory():
     mypath = "/one/of/my/paths:" + wrapper_path  + ":/some/other/path"             # in the middle, still important
     assert wrapper.remove_current_directory(mypath) == "/one/of/my/paths:/some/other/path"
 
+    mypath = wrapper_path + "/:/one/of/my/paths:/some/other/path"             # what if we have an extra slash?
+    assert wrapper.remove_current_directory(mypath) == "/one/of/my/paths:/some/other/path"
+
 def test_quotes():
     quoted_argument = "This is a filename with spaces.exe"
     assert check_output(["./wrapper.py", "---ncardebug-print-arg", quoted_argument]) == quoted_argument
