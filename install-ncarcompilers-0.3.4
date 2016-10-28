@@ -54,9 +54,14 @@ and header files.
 ]])
 
 local basepath = "$HPCI_SW_DIR"         -- base path
-prepend_path("PATH",basepath)
+local mpipath  = basepath .. "/mpi"
 
 setenv("NCAR_EXCLUDE_ASNEEDED", "1")
+setenv("NCAR_WRAPPER_MPI", mpipath)
+
+-- Set paths for serial and MPI wrappers
+prepend_path("PATH",mpipath)
+prepend_path("PATH",basepath)
 EOF
 
 echo "-----"
