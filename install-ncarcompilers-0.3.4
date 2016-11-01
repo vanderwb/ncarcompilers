@@ -29,15 +29,15 @@ for file in *; do
 done
 
 
-if [ -f $HPCI_MOD_DIR/la/compilers/intel/.version ];
+if [ -f $HPCI_MOD_DIR/compilers/intel/.version ];
 then
-   intel_default=`grep ModulesVersion $HPCI_MOD_DIR/la/compilers/intel/.version | awk '{print $3}' | tr -d '"'`
+   intel_default=`grep ModulesVersion $HPCI_MOD_DIR/compilers/intel/.version | awk '{print $3}' | tr -d '"'`
 else
-   intel_default_file=`ls $HPCI_MOD_DIR/la/compilers/intel/ | sort -V | tail -1`
+   intel_default_file=`ls $HPCI_MOD_DIR/compilers/intel/ | sort -V | tail -1`
    intel_default=${intel_default_file%.lua}
 fi
 
-actual_file=$HPCI_MOD_DIR/la/intel/$intel_default/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua
+actual_file=$HPCI_MOD_DIR/intel/$intel_default/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua
 
 # Create the module with the following template
 cat << EOF > $actual_file
