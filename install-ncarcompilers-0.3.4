@@ -29,16 +29,28 @@ for file in *; do
     fi
 done
 
+syslinks=()
+actual_files=()
+for stuff in `find $HPCI_MOD_DIR -name $HPCI_SW_NAME`; do
+    if [ -L $stuff ]; then
+        syslinks+=($stuff)
+    elif [ -f $file ]; then
+        actual_files+=($stuff)
+    fi
+done
 
-if [ -f $HPCI_MOD_DIR/compilers/intel/.version ];
-then
-   intel_default=`grep ModulesVersion $HPCI_MOD_DIR/compilers/intel/.version | awk '{print $3}' | tr -d '"'`
-else
-   intel_default_file=`ls $HPCI_MOD_DIR/compilers/intel/ | sort -V | tail -1`
-   intel_default=${intel_default_file%.lua}
+if [ ${#actual_files[@]} -ne 1 ]; then
+    echo "Can't find where to put the module, maybe you are not using CheyenneModules??"
+    exit 1
 fi
 
-actual_file=$HPCI_MOD_DIR/intel/$intel_default/$HPCI_SW_NAME/${HPCI_SW_VERSION}.lua
+actual_file=$actual_files/${HPCI_SW_VERSION}.lua  # only one element, $HPCI_SW_NAME already part of the filename because of find
+
+# syslinks automatically managed by CheyenneModule, now
+#for needed_syslink in ${needed_syslinks[*]}; do
+#    echo $needed_syslink
+#done
+
 
 # Create the module with the following template
 cat << EOF > $actual_file
