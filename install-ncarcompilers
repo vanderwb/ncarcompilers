@@ -1,6 +1,10 @@
 #!/bin/bash
-#HPCI -x ml git
+#HPCI -n ncarcompilers
+#HPCI -v 0.4
+#HPCI -l git
 #HPCI -u https://github.com/NCAR/ncarcompilers
+
+set -e
 
 # saving current status of the repo
 branch=$(git symbolic-ref --short -q HEAD)
