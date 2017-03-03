@@ -37,19 +37,22 @@ syslinks=()
 actual_files=()
 echo "Figuring out where to put the modules"
 for stuff in `find $HPCI_MOD_DIR -name $HPCI_SW_NAME`; do
-    echo "Trying $stuff"
     if [ -L $stuff ]; then
+        echo "Adding $stuff to the list syslinks"
         syslinks+=($stuff)
     elif [ -f $file ]; then
+        echo "Adding $stuff to the list files"
         actual_files+=($stuff)
+    else
+        echo "Not adding $stuff to any list"
     fi
 done
-echo "Found syslinks: $syslinks"
-echo "Found actual_files: $actual_files"
+echo "Found syslinks: $syslinks[@]"
+echo "Found actual_files: $actual_files[@]"
 
 if [ ${#actual_files[@]} -ne 1 ]; then
-    echo "There are ${#actual_files[@]} whereas simply 1 would be expected. This mean"
-    echo "I am not sure where to put the module, maybe you are not using CheyenneModules??"
+    echo "There are ${#actual_files[@]} non syslinks locations, whereas simply 1 would be expected."
+    echo "This mean I am not sure where to put the module, maybe you are not using CheyenneModules??"
     exit 1
 fi
 
