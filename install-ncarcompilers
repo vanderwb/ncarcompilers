@@ -48,7 +48,8 @@ echo "Found syslinks: $syslinks"
 echo "Found actual_files: $actual_files"
 
 if [ ${#actual_files[@]} -ne 1 ]; then
-    echo "Can't find where to put the module, maybe you are not using CheyenneModules??"
+    echo "There are ${#actual_files[@]} whereas simply 1 would be expected. This mean"
+    echo "I am not sure where to put the module, maybe you are not using CheyenneModules??"
     exit 1
 fi
 
