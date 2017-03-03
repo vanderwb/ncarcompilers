@@ -1,5 +1,10 @@
-import subprocess, os
+import subprocess, os, pytest
 import wrapper
+
+@pytest.fixture
+def stub_env():              # stub os, replacing "import os"
+    stub_env = {}
+    return stub_env
 
 def check_output(cmd):
     return subprocess.check_output(subprocess.list2cmdline(cmd), shell=True).strip()
@@ -105,23 +110,23 @@ def test_single_ldflag():
     assert "-L" + value in results
     del env[name]
 
-def test_multiple_ranked_ldflags():
-    helper_test_multiple_ranked_ldflags('0')
-    helper_test_multiple_ranked_ldflags('0.57')
-    helper_test_multiple_ranked_ldflags('some crappy string')
+def test_multiple_ranked_ldflags(stub_env):
+    helper_test_multiple_ranked_ldflags('0', stub_env)
+    helper_test_multiple_ranked_ldflags('0.57', stub_env)
+    helper_test_multiple_ranked_ldflags('some crappy string', stub_env)
 
-def helper_test_multiple_ranked_ldflags(value):
+def helper_test_multiple_ranked_ldflags(value, env):
     name_foo = 'NCAR_LDFLAGS_FOO'
     name_bar = 'NCAR_LDFLAGS_BAR'
     value_foo = '/glade/apps/opt/foo/1.2.3/gcc/3.4.5/include'
     value_bar = '/glade/apps/opt/bar/7.8.9/intel/10.11.12/include'
 
-    env = os.environ
     env[name_foo] = value_foo
     env['NCAR_RANK_FOO'] = value
     env[name_bar] = value_bar
     env['NCAR_RANK_BAR'] = '1'
 
+    wrapper.os.environ = env
     results = wrapper.ldflags_str() # with the env var
     expected = "-L" + env[name_foo] + " " + "-L" + env[name_bar]
     assert " ".join(results.split()) == expected.strip()
