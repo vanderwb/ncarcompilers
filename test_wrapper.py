@@ -36,6 +36,10 @@ def test_quotes():
     assert check_output(["./wrapper.py", "---ncardebug-print-arg", quoted_argument]) == quoted_argument
 
 def test_callexternal():
+    print "***********************************************************"
+    print "* This test may fail if the ncarcompiler module is loaded *"
+    print "*         Unload it if you see this message               *"
+    print "***********************************************************"
     results = check_output(["./gcc", "--version"])
     assert "Free Software Foundation" in results
 
