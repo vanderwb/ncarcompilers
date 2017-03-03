@@ -151,10 +151,12 @@ def test_single_rpath(stub_env):
     stub_env.pop(name, None)
     results = wrapper.rpath_str() # without the env var
     assert not RPATH_FLAG + value in results
+    assert results.startswith("-Wl,--disable-new-dtag")
 
     stub_env[name] = value
     results = wrapper.rpath_str() # with the env var set
     assert RPATH_FLAG + value in results
+    assert results.startswith("-Wl,--disable-new-dtag")
 
 # no need to test multiple rpath, since the code exercising this is
 # exactly the same for multiple includes, however a quick test for
@@ -172,11 +174,13 @@ def test_multiple_rpath_together(stub_env):
     results = wrapper.ldflags_str() # without the env var
     assert not RPATH_FLAG + value_foo in results
     assert not RPATH_FLAG + value_bar in results
+    assert results.startswith("-Wl,--disable-new-dtag")
 
     stub_env[name] = value_foo + ":" + value_bar
     results = wrapper.rpath_str() # with the env var set
     assert RPATH_FLAG + value_foo in results
     assert RPATH_FLAG + value_bar in results
+    assert results.startswith("-Wl,--disable-new-dtag")
 
 def test_single_linklib(stub_env):
     name = 'NCAR_LIBS_FOO'
