@@ -38,17 +38,15 @@ actual_files=()
 echo "Figuring out where to put the modules"
 for stuff in `find $HPCI_MOD_DIR -name $HPCI_SW_NAME`; do
     if [ -L $stuff ]; then
-        echo "Adding $stuff to the list syslinks"
+        echo "Adding to the list syslinks: $stuff"
         syslinks+=($stuff)
     elif [ -f $file ]; then
-        echo "Adding $stuff to the list files"
+        echo "Adding to the list directories: $stuff"
         actual_files+=($stuff)
     else
         echo "Not adding $stuff to any list"
     fi
 done
-echo "Found syslinks: $syslinks[@]"
-echo "Found actual_files: $actual_files[@]"
 
 if [ ${#actual_files[@]} -ne 1 ]; then
     echo "There are ${#actual_files[@]} non syslinks locations, whereas simply 1 would be expected."
