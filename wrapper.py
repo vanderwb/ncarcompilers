@@ -45,7 +45,7 @@ def ldflags_str():
     return create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-L')
 
 def rpath_str():
-    return "-Wl,--disable-new-dtag " + create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-Wl,-rpath,')
+    return "-Wl,--disable-new-dtags " + create_str(parse_env = 'NCAR_LDFLAGS_', joinwith='-Wl,-rpath,')
 
 def linklib_str():
     try:
