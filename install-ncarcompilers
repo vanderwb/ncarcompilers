@@ -1,6 +1,6 @@
 #!/bin/bash
 #HPCI -n ncarcompilers
-#HPCI -v 0.4
+#HPCI -v 0.4.1
 #HPCI -l git
 #HPCI -u https://github.com/NCAR/ncarcompilers
 
