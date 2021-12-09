@@ -1,32 +1,10 @@
-PYTEST_AVAILABLE=$(shell which py.test > /dev/null 2>&1 ; echo $$? )
+PREFIX ?= /usr/local
 
-.PHONY: test exectest unittest oldunittest clean
+cbin = gcc gfortran g++ c++ icc ifort icpc icx ifx icpx pgcc pgf77 pgf90 pgf95 pgfortran pgc++ nvc nvc++ nvfortran
+mbin = mpicc mpiCC mpigcc mpiicc mpiifort mpifort mpif77 mpif90 mpif08 mpic++ mpicxx ortecc orteCC
 
-test: unittest exectest
-
-exectest:
-	./gcc --show
-	@echo
-	./gcc --version
-	@echo "========================================"
-	PATH=`pwd`:$(PATH) gcc --show
-	@echo
-	PATH=`pwd`:$(PATH) gcc --version
-	@echo "========================================"
-	PATH=./:$(PATH) gcc --show
-	@echo
-	PATH=./:$(PATH) gcc --version
-
-unittest:
-ifeq ($(PYTEST_AVAILABLE), 0)
-	py.test
-else
-	@$(MAKE) --quiet oldunittest
-endif
-
-oldunittest:
-	python test_wrapper.py
-
-clean:
-	-rm -fr __pycache__ *.pyc
-
+wrapper:
+	mkdir -p $(PREFIX)/bin/mpi
+	cp wrapper.sh $(PREFIX)/bin
+	./install.sh $(PREFIX)/bin $(cbin)
+	./install.sh $(PREFIX)/bin/mpi $(mbin)
