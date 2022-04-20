@@ -1,15 +1,19 @@
 PREFIX ?= /usr/local
 
-cbin = gcc gfortran g++ c++ icc ifort icpc icx ifx icpx pgcc pgf77 pgf90 pgf95 pgfortran pgc++ nvc nvc++ nvfortran crayCC craycc craycxx crayftn
+abin = gcc cc CC ftn
+cbin = gfortran g++ c++ icc ifort icpc icx ifx icpx pgcc pgf77 pgf90 pgf95 pgfortran pgc++ nvc nvc++ nvfortran crayCC craycc craycxx crayftn
 mbin = mpicc mpiCC mpigcc mpiicc mpiifort mpifort mpif77 mpif90 mpif08 mpic++ mpicxx ortecc orteCC
 
-.PHONY: wrapper install clean
+.PHONY: all wrapper install clean
+
+all: wrapper
+	./install.sh bin $(cbin)
+	./install.sh bin/mpi $(mbin)
 
 wrapper:
 	mkdir -p bin/mpi
 	cp wrapper.sh bin
-	./install.sh bin $(cbin)
-	./install.sh bin/mpi $(mbin)
+	BASEBINS=true ./install.sh bin $(abin)
 
 install:
 	mkdir -p $(PREFIX)
