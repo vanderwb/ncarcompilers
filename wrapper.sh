@@ -17,6 +17,36 @@ if cmp --silent $envbin $mypath/$myname; then
     fi
 fi
 
+# If Cray wrappers are being used, convert names to Cray...
+if [[ -n $CRAYPE_DIR ]] && [[ ${NCAR_WRAPPER_CRAY,,} != false ]]; then
+    case $myname in
+        gcc|icc|icx|pgcc|nvc|craycc)
+            myname=cc
+            ;;
+        g++|icpc|icpx|pgc++|nvc++|crayCC|craycxx)
+            myname=CC
+            ;;
+        gfortran|ifort|ifx|pgf77|pgf90|pgf95|pgfortran|nvfortran|crayftn)
+            myname=ftn
+            ;;
+        *)
+            if [[ -n $CRAY_MPICH_DIR ]]; then
+                case $myname in
+                    mpicc)
+                        myname=cc
+                        ;;
+                    mpic++|mpicxx)
+                        myname=CC
+                        ;;
+                    mpif77|mpif90|mpifort)
+                        myname=ftn
+                        ;;
+                esac
+            fi
+            ;;
+    esac
+fi
+
 # Check for existence of actual binary
 if ! which $myname >& /dev/null; then
     echo "NCAR_ERROR: wrapper cannot locate path to $myname"
